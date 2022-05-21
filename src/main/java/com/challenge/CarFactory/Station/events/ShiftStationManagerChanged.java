@@ -6,17 +6,11 @@ import com.challenge.CarFactory.Station.values.StationManagerId;
 
 public class ShiftStationManagerChanged extends DomainEvent {
 
-    private final StationManagerId stationManagerId;
     private final Shift shift;
 
-    public ShiftStationManagerChanged(StationManagerId stationManagerId, Shift shift) {
+    public ShiftStationManagerChanged(Shift shift) {
         super("carfactory.station.shiftstationmanagerchanged");
-        this.stationManagerId = stationManagerId;
         this.shift = shift;
-    }
-
-    public StationManagerId getStationManagerId() {
-        return stationManagerId;
     }
 
     public Shift getShift() {

@@ -1,7 +1,6 @@
 package com.challenge.CarFactory.Station;
 
 import co.com.sofka.domain.generic.AggregateEvent;
-import co.com.sofka.domain.generic.DomainEvent;
 import com.challenge.CarFactory.Car.Car;
 import com.challenge.CarFactory.Car.values.AssemblyReportId;
 import com.challenge.CarFactory.Car.values.CarId;
@@ -16,20 +15,23 @@ import java.util.Set;
 
 public class Station extends AggregateEvent<StationId> {
 
-    protected StationManagerId stationManagerId;
+    protected StationManager stationManager;
     protected DayReportId dayReportId;
     protected Set<Employee> employees;
     protected Set<Car> cars;
     protected Type type;
 
-    public Station(StationId entityId, StationManagerId stationManagerId, DayReportId dayReportId, Type type) {
+    public Station(StationId entityId, StationManager stationManager, DayReportId dayReportId, Type type) {
         super(entityId);
-        appendChange(new StationCreated(stationManagerId, dayReportId, type)).apply();
+        appendChange(new StationCreated(stationManager, dayReportId, type)).apply();
     }
 
-    public void addStationManagerId(StationManagerId stationManagerId){
-        Objects.requireNonNull(stationManagerId, "The station manager id can not be null");
-        appendChange(new StationManagerIdAdded(stationManagerId)).apply();
+    public void addStationManager(StationManagerId entityId, Name name, Identification identification, Shift shift){
+        Objects.requireNonNull(entityId, "The station manager id can not be null");
+        Objects.requireNonNull(name, "The name can not be null");
+        Objects.requireNonNull(identification, "The identification can not be null");
+        Objects.requireNonNull(shift, "The shift can not be null");
+        appendChange(new StationManagerAdded(entityId, name, identification, shift)).apply();
     }
 
     public void addDayReportId(DayReportId dayReportId){
@@ -58,10 +60,9 @@ public class Station extends AggregateEvent<StationId> {
         appendChange(new EmployeeJobTitleChanged(entityId, jobTitle)).apply();
     }
 
-    public void changeShiftStationManager(StationManagerId entityId, Shift shift){
-        Objects.requireNonNull(entityId, "The employee id can not be null");
+    public void changeShiftStationManager(Shift shift){
         Objects.requireNonNull(shift, "The shift can not be null");
-        appendChange(new ShiftStationManagerChanged(entityId, shift)).apply();
+        appendChange(new ShiftStationManagerChanged(shift)).apply();
     }
 
     public Optional<Employee> getEmployeeById(EmployeeId entityId){
@@ -78,8 +79,8 @@ public class Station extends AggregateEvent<StationId> {
                 .findFirst();
     }
 
-    public StationManagerId getStationManagerId() {
-        return stationManagerId;
+    public StationManager getStationManager() {
+        return stationManager;
     }
 
     public DayReportId getDayReportId() {
