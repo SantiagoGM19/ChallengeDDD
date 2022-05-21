@@ -1,7 +1,9 @@
 package com.challenge.CarFactory.Station;
 
 import co.com.sofka.domain.generic.AggregateEvent;
+import co.com.sofka.domain.generic.DomainEvent;
 import com.challenge.CarFactory.Car.Car;
+import com.challenge.CarFactory.Car.CarChange;
 import com.challenge.CarFactory.Car.values.AssemblyReportId;
 import com.challenge.CarFactory.Car.values.CarId;
 import com.challenge.CarFactory.Car.values.Manufacturer;
@@ -24,6 +26,17 @@ public class Station extends AggregateEvent<StationId> {
     public Station(StationId entityId, StationManager stationManager, DayReportId dayReportId, Type type) {
         super(entityId);
         appendChange(new StationCreated(stationManager, dayReportId, type)).apply();
+    }
+
+    private Station(StationId entityId){
+        super(entityId);
+        subscribe(new StationChange(this));
+    }
+
+    public static Station from(StationId stationId, List<DomainEvent> events){
+        var station = new Station(stationId);
+        events.forEach(station::applyEvent);
+        return station;
     }
 
     public void addStationManager(StationManagerId entityId, Name name, Identification identification, Shift shift){
