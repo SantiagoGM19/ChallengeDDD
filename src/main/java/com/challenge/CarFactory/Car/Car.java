@@ -1,9 +1,11 @@
 package com.challenge.CarFactory.Car;
 
 import co.com.sofka.domain.generic.AggregateEvent;
+import co.com.sofka.domain.generic.DomainEvent;
 import com.challenge.CarFactory.Car.events.*;
 import com.challenge.CarFactory.Car.values.*;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -18,6 +20,17 @@ public class Car extends AggregateEvent<CarId> {
     public Car(CarId entityId, AssemblyReportId assemblyReportId, Manufacturer manufacturer) {
         super(entityId);
         appendChange(new  CarCreated(assemblyReportId, manufacturer)).apply();
+    }
+
+    private Car(CarId entityId){
+        super(entityId);
+        subscribe(new CarChange(this));
+    }
+
+    public static Car from(CarId carId, List<DomainEvent> events){
+        var car = new Car(carId);
+        events.forEach(car::applyEvent);
+        return car;
     }
 
     public void addPiece(PieceId entityId, PieceType pieceType){
@@ -39,14 +52,21 @@ public class Car extends AggregateEvent<CarId> {
         appendChange(new AssemblyReportIdAdded(entityId)).apply();
     }
 
-    public void changePiece(PieceId entityId){
+    public void changePiece(PieceId entityId, PieceType pieceType){
         Objects.requireNonNull(entityId, "Piece id needed to change it");
-        appendChange(new PieceChanged(entityId)).apply();
+        Objects.requireNonNull(pieceType, "Piece type null, it is required");
+        appendChange(new PieceChanged(entityId, pieceType)).apply();
     }
 
     public void updateManufacturer(Manufacturer manufacturer){
-        Objects.requireNonNull(manufacturer, "manufacturer needed to update");
+        Objects.requireNonNull(manufacturer, "Manufacturer needed to update");
         appendChange(new ManufacturerUpdated(manufacturer)).apply();
+    }
+
+    public void changeStatusProcess(ProcessId entityId, Status status){
+        Objects.requireNonNull(entityId, "The process id given is null, it is required");
+        Objects.requireNonNull(status, "The status given is null, it is required");
+        appendChange(new StatusProcessChanged(entityId, status)).apply();
     }
 
     public Optional<Piece> getPieceById(PieceId entityId){
