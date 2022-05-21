@@ -2,14 +2,15 @@ package com.challenge.CarFactory.Car.values;
 
 import co.com.sofka.domain.generic.ValueObject;
 
-public class TypePiece implements ValueObject<TypePiece.Value> {
+public class ProcessType implements ValueObject<ProcessType.Value> {
+
     @Override
-    public TypePiece.Value value() {
+    public ProcessType.Value value() {
         return null;
     }
 
     public interface Value{
         String type();
-        String quality();
+        String steps();
     }
 }
