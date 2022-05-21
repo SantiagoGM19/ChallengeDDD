@@ -23,7 +23,7 @@ public class AssemblyReport extends Entity<AssemblyReportId> {
     }
 
     public void addDescription(Description description){
-        this.description = Objects.requireNonNull(description, "");
+        this.description = Objects.requireNonNull(description, "The description must be defined, it is null");
     }
 
     public TotalTime totalTime() {

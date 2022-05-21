@@ -1,11 +1,35 @@
 package com.challenge.CarFactory.Station;
 
 import co.com.sofka.domain.generic.Entity;
+import com.challenge.CarFactory.Station.values.Identification;
+import com.challenge.CarFactory.Station.values.Name;
+import com.challenge.CarFactory.Station.values.Shift;
 import com.challenge.CarFactory.Station.values.StationManagerId;
+
+import java.util.Objects;
 
 public class StationManager extends Entity<StationManagerId> {
 
-    public StationManager(StationManagerId entityId) {
+    private Name name;
+    private Identification identification;
+    private Shift shift;
+
+    public StationManager(StationManagerId entityId, Name name, Identification identification, Shift shift) {
         super(entityId);
+        this.name = name;
+        this.identification = identification;
+        this.shift = shift;
+    }
+
+    public void updateName(Name name){
+        this.name = Objects.requireNonNull(name, "The name can not be null");
+    }
+
+    public void updateIdentification(Identification identification){
+        this.identification = Objects.requireNonNull(identification, "The identification can not be null");
+    }
+
+    public void updateShift(Shift shift){
+        this.shift = Objects.requireNonNull(shift, "The shift can not be null");
     }
 }
