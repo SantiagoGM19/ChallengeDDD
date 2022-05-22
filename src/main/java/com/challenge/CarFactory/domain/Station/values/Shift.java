@@ -17,8 +17,8 @@ public class Shift implements ValueObject<String> {
             throw new IllegalArgumentException("The shift can only be 40 characters long");
         }
 
-        if(this.value.length() < 10){
-            throw new IllegalArgumentException("The shift is required to be 10 characters at least");
+        if(this.value.length() < 5){
+            throw new IllegalArgumentException("The shift is required to be 5 characters at least");
         }
     }
 

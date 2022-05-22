@@ -34,7 +34,6 @@ public class CreateStationUseCaseTest {
 
         //Assert
         var event = (StationCreated)events.get(0);
-        Assertions.assertEquals(command.getDayReportId().value(), event.getDayReportId().value());
         Assertions.assertEquals(command.getType().value(), event.getType().value());
     }
 }

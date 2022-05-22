@@ -13,7 +13,6 @@ public class CreateStationUseCase extends UseCase<RequestCommand<CreateStation>,
         var command = createStationRequestCommand.getCommand();
         var station = new Station(
                 command.getEntityId(),
-                command.getDayReportId(),
                 command.getType()
         );
 

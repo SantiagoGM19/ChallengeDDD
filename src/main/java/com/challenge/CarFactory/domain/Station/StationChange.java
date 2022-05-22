@@ -11,7 +11,6 @@ public class StationChange extends EventChange {
     public StationChange(Station station) {
 
         apply((StationCreated event) -> {
-            station.dayReportId = event.getDayReportId();
             station.type = event.getType();
             station.cars = new HashSet<>();
             station.employees = new HashSet<>();
@@ -58,6 +57,10 @@ public class StationChange extends EventChange {
                     event.getIdentification(),
                     event.getShift()
             );
+        });
+
+        apply((StationAdminNotified event) -> {
+            station.message = event.getMessage();
         });
     }
 }

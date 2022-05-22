@@ -3,18 +3,19 @@ package com.challenge.CarFactory;
 import co.com.sofka.business.generic.UseCaseHandler;
 import co.com.sofka.business.repository.DomainEventRepository;
 import co.com.sofka.business.support.RequestCommand;
-import com.challenge.CarFactory.domain.Car.commands.AddProcess;
-import com.challenge.CarFactory.domain.Car.events.CarCreated;
-import com.challenge.CarFactory.domain.Car.events.ProcessAdded;
-import com.challenge.CarFactory.domain.Car.values.*;
+import com.challenge.CarFactory.domain.Car.values.AssemblyReportId;
+import com.challenge.CarFactory.domain.Car.values.CarId;
+import com.challenge.CarFactory.domain.Car.values.Manufacturer;
 import com.challenge.CarFactory.domain.Station.commands.AddCar;
+import com.challenge.CarFactory.domain.Station.commands.AddDayReportId;
 import com.challenge.CarFactory.domain.Station.events.CarAdded;
+import com.challenge.CarFactory.domain.Station.events.DayReportIdAdded;
 import com.challenge.CarFactory.domain.Station.events.StationCreated;
 import com.challenge.CarFactory.domain.Station.values.DayReportId;
 import com.challenge.CarFactory.domain.Station.values.StationId;
 import com.challenge.CarFactory.domain.Station.values.Type;
 import com.challenge.CarFactory.usecase.AddCarUseCase;
-import com.challenge.CarFactory.usecase.AddProcessUseCase;
+import com.challenge.CarFactory.usecase.AddDayReportIdUseCase;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +26,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
-public class AddCarUseCaseTest {
+public class AddDayReportIdUseCaseTest {
 
     private final String ROOTID = "S1";
 
@@ -33,15 +34,13 @@ public class AddCarUseCaseTest {
     private DomainEventRepository repository;
 
     @Test
-    void addCar(){
-        var command = new AddCar(
+    void addReportId(){
+        var command = new AddDayReportId(
                 StationId.of(ROOTID),
-                CarId.of("MAZ-12"),
-                AssemblyReportId.of("ASY-01"),
-                new Manufacturer("Mazda")
+                DayReportId.of("D1")
         );
 
-        var useCase = new AddCarUseCase();
+        var useCase = new AddDayReportIdUseCase();
 
         Mockito.when(repository.getEventsBy(ROOTID)).thenReturn(List.of(
                 new StationCreated(
@@ -54,13 +53,11 @@ public class AddCarUseCaseTest {
                 .getInstance()
                 .setIdentifyExecutor(ROOTID)
                 .syncExecutor(useCase, new RequestCommand<>(command))
-                .orElseThrow(() -> new IllegalArgumentException("Something went wrong adding the car to the station"))
+                .orElseThrow(() -> new IllegalArgumentException("Something went wrong adding the day report id to the station"))
                 .getDomainEvents();
 
-        var event = (CarAdded)events.get(0);
-        Assertions.assertEquals(command.getCarId().value(), event.getCarId().value());
-        Assertions.assertEquals(command.getAssemblyReportId().value(), event.getAssemblyReportId().value());
-        Assertions.assertEquals(command.getManufacturer().value(), event.getManufacturer().value());
+        var event = (DayReportIdAdded)events.get(0);
+        Assertions.assertEquals(command.getDayReportId().value(), event.getDayReportId().value());
         Mockito.verify(repository).getEventsBy(ROOTID);
     }
 }

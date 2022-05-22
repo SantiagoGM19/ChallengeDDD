@@ -21,10 +21,11 @@ public class Station extends AggregateEvent<StationId> {
     protected Set<Employee> employees;
     protected Set<Car> cars;
     protected Type type;
+    protected String message;
 
-    public Station(StationId entityId, DayReportId dayReportId, Type type) {
+    public Station(StationId entityId, Type type) {
         super(entityId);
-        appendChange(new StationCreated(dayReportId, type)).apply();
+        appendChange(new StationCreated(type)).apply();
     }
 
     private Station(StationId entityId){
@@ -75,6 +76,11 @@ public class Station extends AggregateEvent<StationId> {
     public void changeShiftStationManager(Shift shift){
         Objects.requireNonNull(shift, "The shift can not be null");
         appendChange(new ShiftStationManagerChanged(shift)).apply();
+    }
+
+    public void notifyStationAdmin(String message){
+        Objects.requireNonNull(message, "The message for the notify can not be null");
+        appendChange(new StationAdminNotified(message)).apply();
     }
 
     public Optional<Employee> getEmployeeById(EmployeeId entityId){

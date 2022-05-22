@@ -17,8 +17,8 @@ public class JobTitle implements ValueObject<String> {
             throw new IllegalArgumentException("The job title can only be 40 characters long");
         }
 
-        if(this.value.length() < 10){
-            throw new IllegalArgumentException("The job title is required to be 10 characters at least");
+        if(this.value.length() < 3){
+            throw new IllegalArgumentException("The job title is required to be 3 characters at least");
         }
     }
 

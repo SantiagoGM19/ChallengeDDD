@@ -4,6 +4,7 @@ import co.com.sofka.domain.generic.AggregateEvent;
 import co.com.sofka.domain.generic.DomainEvent;
 import com.challenge.CarFactory.domain.Car.events.*;
 import com.challenge.CarFactory.domain.Car.values.*;
+import com.challenge.CarFactory.domain.Station.events.StationAdminNotified;
 
 import java.util.List;
 import java.util.Objects;
@@ -67,6 +68,11 @@ public class Car extends AggregateEvent<CarId> {
         Objects.requireNonNull(entityId, "The process id given is null, it is required");
         Objects.requireNonNull(status, "The status given is null, it is required");
         appendChange(new StatusProcessChanged(entityId, status)).apply();
+    }
+
+    public void notifyAssemblyAdmin(String message){
+        Objects.requireNonNull(message, "The message for the notify can not be null");
+        appendChange(new AssemblyAdminNotified(message)).apply();
     }
 
     public Optional<Piece> getPieceById(PieceId entityId){
